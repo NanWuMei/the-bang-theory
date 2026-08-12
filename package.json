@@ -1,0 +1,21 @@
+{
+  "name": "tbbt-quotes",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter @tbbt/web dev",
+    "build": "pnpm --filter @tbbt/web build",
+    "start": "pnpm --filter @tbbt/web start",
+    "lint": "pnpm -r lint",
+    "db:generate": "pnpm --filter @tbbt/db generate",
+    "db:migrate": "pnpm --filter @tbbt/db migrate",
+    "db:studio": "pnpm --filter @tbbt/db studio",
+    "ingest:download-subtitles": "tsx scripts/ingest/download-subtitles.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

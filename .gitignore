@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# next.js
+.next/
+out/
+
+# env
+.env
+.env.local
+.env.*.local
+.env.prod
+
+# media & corpus (never commit)
+data/raw/
+data/processed/
+*.mp4
+*.mkv
+*.srt
+
+# docker volumes
+data/postgres/
+data/meilisearch/
+data/redis/
+data/minio/
+
+# misc
+.DS_Store
+*.log
+dist/
+.turbo/
+coverage/
+
+# drizzle
+packages/db/drizzle/meta/

@@ -1,0 +1,42 @@
+---
+description: TBBT 台词素材检索平台 — 项目约定
+globs:
+alwaysApply: true
+---
+
+# TBBT Quotes 项目约定
+
+## 架构
+
+- Monorepo：`apps/web` + `packages/{db,search,clip,media,share,mcp-server}`
+- API 路由只做薄层，业务逻辑放 `packages/`
+- 实现手册：`docs/implementation-handbook.md`（偏离前先更新文档）
+
+## 命名与格式
+
+- dialogue id：`s{season}e{episode}-{line_index:04d}`，例 `s01e01-0042`
+- 所有时间戳用 **毫秒整数**（`start_ms`, `end_ms`）
+- 视频文件命名：`s01e01.mp4`（season/episode 两位补零）
+
+## 数据与存储
+
+- 元数据 → PostgreSQL（Drizzle ORM）
+- 搜索索引 → Meilisearch
+- 媒体文件 → MinIO（`episodes/` 原片，`clips/` 切片缓存）
+- **不提交**：`.env`、MP4、SRT、原始语料
+
+## 媒体处理
+
+- ffmpeg 优先 `-c copy`（不重编码），切点不准再 fallback `libx264`
+- 切片策略：按需生成 + MinIO 永久缓存，不预切全量
+
+## 开发顺序
+
+按 Phase 推进，不要跳阶段：
+0 脚手架 → 1 语料入库 → 2 搜索 → 3 切片播放 → 4 素材篮/分享 → 5 MCP
+
+## 代码风格
+
+- TypeScript strict mode
+- 改 `packages/` 后检查 `apps/web` 引用是否正常
+- 保持 diff 最小，不添加未请求的功能
