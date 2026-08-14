@@ -13,8 +13,12 @@ pnpm install
 ### 2. 启动基础设施
 
 ```bash
+# 元数据在 Supabase；本地只起搜索/队列/视频存储
 docker compose up -d
-cp .env.example .env.local   # apps/web 会自动读取根目录 .env
+
+# 配置 Supabase 连接，见 docs/supabase-setup.md
+cp .env.example .env
+# 编辑 .env 填入 DATABASE_URL
 ```
 
 ### 3. 启动开发服务器
@@ -46,7 +50,8 @@ docs/              实现手册
 | 服务 | 端口 |
 |------|------|
 | Web | 3000 |
-| PostgreSQL | 5432 |
+| **Supabase PostgreSQL** | 云端（见 docs/supabase-setup.md） |
+| PostgreSQL（本地可选） | 5432 `--profile local-db` |
 | Meilisearch | 7700 |
 | Redis | 6379 |
 | MinIO API | 9000 |

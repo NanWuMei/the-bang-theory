@@ -10,7 +10,7 @@ alwaysApply: true
 
 - Monorepo：`apps/web` + `packages/{db,search,clip,media,share,mcp-server}`
 - API 路由只做薄层，业务逻辑放 `packages/`
-- 实现手册：`docs/implementation-handbook.md`（偏离前先更新文档）
+- 实现手册：`docs/ai-coding-steps.md`（权威，11 步）· `docs/implementation-handbook.md`（旧版参考）
 
 ## 命名与格式
 
@@ -20,9 +20,9 @@ alwaysApply: true
 
 ## 数据与存储
 
-- 元数据 → PostgreSQL（Drizzle ORM）
-- 搜索索引 → Meilisearch
-- 媒体文件 → MinIO（`episodes/` 原片，`clips/` 切片缓存）
+- 元数据 → **Supabase PostgreSQL**（表：`episodes`, `subtitle_lines`, `clip_cache`, `share_snapshots`）
+- 搜索 → **Supabase pg_trgm 索引**（不用 Meilisearch）
+- 媒体 → **Supabase Storage**（bucket: `tbbt-videos`, `tbbt-clips`）
 - **不提交**：`.env`、MP4、SRT、原始语料
 
 ## 媒体处理
@@ -32,8 +32,8 @@ alwaysApply: true
 
 ## 开发顺序
 
-按 Phase 推进，不要跳阶段：
-0 脚手架 → 1 语料入库 → 2 搜索 → 3 切片播放 → 4 素材篮/分享 → 5 MCP
+按 Step 推进，不要跳阶段：
+1 初始化 → 2 数据库 → 3 素材 → 4 字幕脚本 → 5 搜索API → 6 Storage → 7 播放 → 8 UI → 9 分享 → 10 部署 → 11 MCP
 
 ## 代码风格
 

@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "@tbbt/db": "workspace:*",
-    "@tbbt/media": "workspace:*"
+    "@tbbt/media": "workspace:*",
+    "drizzle-orm": "^0.38.0"
   },
   "devDependencies": {
     "typescript": "^5.7.0"

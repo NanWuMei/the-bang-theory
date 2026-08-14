@@ -1,3 +1,19 @@
+export {
+  CLIPS_BUCKET,
+  CLIPS_PREFIX,
+  EPISODES_PREFIX,
+  THUMBS_PREFIX,
+  VIDEOS_BUCKET,
+  clipKey,
+  createSignedUrl,
+  episodeKey,
+  getSupabaseAdmin,
+  isStorageConfigured,
+  objectExists,
+  thumbKey,
+  uploadLocalFile,
+} from "./supabase-storage";
+
 import {
   S3Client,
   GetObjectCommand,
@@ -5,9 +21,9 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-export const EPISODES_PREFIX = "episodes/";
-export const CLIPS_PREFIX = "clips/";
+export { PutObjectCommand, GetObjectCommand };
 
+/** @deprecated 本地 MinIO，已由 Supabase Storage 取代 */
 export function getMinioConfig() {
   return {
     endpoint: process.env.MINIO_ENDPOINT ?? "http://localhost:9000",
@@ -18,6 +34,7 @@ export function getMinioConfig() {
   };
 }
 
+/** @deprecated */
 export function getS3Client() {
   const cfg = getMinioConfig();
   return new S3Client({
@@ -31,15 +48,7 @@ export function getS3Client() {
   });
 }
 
-export function episodeKey(season: number, episode: number) {
-  return `${EPISODES_PREFIX}s${String(season).padStart(2, "0")}e${String(episode).padStart(2, "0")}.mp4`;
-}
-
-export function clipKey(dialogueId: string) {
-  return `${CLIPS_PREFIX}${dialogueId}.mp4`;
-}
-
-/** 生成预签名播放 URL，默认 1 小时有效 */
+/** @deprecated 使用 createSignedUrl */
 export async function presignGetUrl(
   key: string,
   expiresIn = 3600
@@ -49,5 +58,3 @@ export async function presignGetUrl(
   const command = new GetObjectCommand({ Bucket: cfg.bucket, Key: key });
   return getSignedUrl(client, command, { expiresIn });
 }
-
-export { PutObjectCommand, GetObjectCommand };

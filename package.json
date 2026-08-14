@@ -9,9 +9,19 @@
     "db:generate": "pnpm --filter @tbbt/db generate",
     "db:migrate": "pnpm --filter @tbbt/db migrate",
     "db:studio": "pnpm --filter @tbbt/db studio",
-    "ingest:download-subtitles": "tsx scripts/ingest/download-subtitles.ts"
+    "ingest:download-subtitles": "tsx scripts/ingest/download-subtitles.ts",
+    "ingest:pipeline": "tsx scripts/ingest/pipeline.ts",
+    "ingest:seed": "tsx scripts/ingest/seed-db.ts",
+    "ingest:sync-meili": "tsx scripts/ingest/sync-meili.ts",
+    "media:upload-episode": "tsx scripts/media/upload-episode.ts",
+    "test:search": "tsx scripts/ingest/test-search.ts",
+    "test:parse-srt": "tsx --test scripts/ingest/parse-srt.test.ts"
   },
   "devDependencies": {
+    "@tbbt/db": "workspace:*",
+    "@tbbt/media": "workspace:*",
+    "@tbbt/search": "workspace:*",
+    "dotenv": "^16.4.7",
     "tsx": "^4.19.0"
   },
   "engines": {

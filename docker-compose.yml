@@ -1,5 +1,7 @@
 services:
+  # 本地 PostgreSQL（可选；默认使用 Supabase 云数据库，见 docs/supabase-setup.md）
   postgres:
+    profiles: ["local-db"]
     image: postgres:16-alpine
     restart: unless-stopped
     environment:

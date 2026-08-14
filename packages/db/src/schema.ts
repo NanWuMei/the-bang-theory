@@ -5,7 +5,7 @@ import {
   integer,
   smallint,
   timestamp,
-  jsonb,
+  uuid,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
@@ -17,48 +17,53 @@ export const episodes = pgTable(
     season: smallint("season").notNull(),
     episode: smallint("episode").notNull(),
     title: text("title"),
-    minioKey: text("minio_key").notNull(),
+    storageKey: text("storage_key").notNull(),
     durationMs: integer("duration_ms"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   },
-  (t) => [uniqueIndex("episodes_season_episode_idx").on(t.season, t.episode)]
+  (t) => [uniqueIndex("episodes_season_episode_key").on(t.season, t.episode)]
 );
 
-/** 台词（搜索主体） */
-export const dialogues = pgTable("dialogues", {
+/** 字幕行（搜索主体；search_text 为 DB 生成列，不入库） */
+export const subtitleLines = pgTable("subtitle_lines", {
   id: text("id").primaryKey(),
   episodeId: integer("episode_id")
     .notNull()
-    .references(() => episodes.id),
+    .references(() => episodes.id, { onDelete: "cascade" }),
   startMs: integer("start_ms").notNull(),
   endMs: integer("end_ms").notNull(),
-  textEn: text("text_en").notNull(),
-  textZh: text("text_zh"),
+  enText: text("en_text").notNull(),
+  zhText: text("zh_text"),
   speaker: text("speaker"),
   lineIndex: integer("line_index").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
-/** 切片状态（与 MinIO 对象对应） */
-export const clips = pgTable("clips", {
-  dialogueId: text("dialogue_id")
+/** 切片缓存 */
+export const clipCache = pgTable("clip_cache", {
+  subtitleLineId: text("subtitle_line_id")
     .primaryKey()
-    .references(() => dialogues.id),
-  minioKey: text("minio_key"),
+    .references(() => subtitleLines.id, { onDelete: "cascade" }),
+  storageKey: text("storage_key"),
   status: text("status").notNull().default("pending"),
   fileSize: integer("file_size"),
   generatedAt: timestamp("generated_at", { withTimezone: true }),
   errorMessage: text("error_message"),
 });
 
-/** 分享快照 */
-export const shares = pgTable("shares", {
-  slug: text("slug").primaryKey(),
-  dialogueIds: jsonb("dialogue_ids").$type<string[]>().notNull(),
+/** 素材篮 / 分享 */
+export const selectedAssets = pgTable("selected_assets", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  lineIds: text("line_ids").array().notNull(),
+  shareTitle: text("share_title"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-  expiresAt: timestamp("expires_at", { withTimezone: true }),
 });
 
 export type Episode = typeof episodes.$inferSelect;
-export type Dialogue = typeof dialogues.$inferSelect;
-export type Clip = typeof clips.$inferSelect;
-export type Share = typeof shares.$inferSelect;
+export type SubtitleLine = typeof subtitleLines.$inferSelect;
+export type ClipCache = typeof clipCache.$inferSelect;
+export type SelectedAsset = typeof selectedAssets.$inferSelect;
+
+// 兼容旧命名（逐步废弃）
+export const dialogues = subtitleLines;
+export type Dialogue = SubtitleLine;
