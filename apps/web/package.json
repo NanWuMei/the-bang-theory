@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/env": "15.5.23",
     "@tbbt/clip": "workspace:*",
     "@tbbt/db": "workspace:*",
     "@tbbt/media": "workspace:*",
