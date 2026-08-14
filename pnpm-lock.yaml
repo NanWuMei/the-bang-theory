@@ -26,6 +26,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@next/env':
+        specifier: 15.5.23
+        version: 15.5.23
       '@tbbt/clip':
         specifier: workspace:*
         version: link:../../packages/clip
